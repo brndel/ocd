@@ -5,7 +5,7 @@ pub struct OcdConfig {
     pub class_path: String,
     pub main_class: String,
     pub interaction: OcdInteractionConfig,
-    pub runner: OcdRunnerConfig,
+    pub runner: Option<OcdRunnerConfig>,
 }
 
 #[derive(Deserialize)]

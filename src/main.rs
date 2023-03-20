@@ -2,13 +2,7 @@ mod config;
 mod parser;
 mod runner;
 
-use std::{
-    env::current_dir,
-    fs,
-    io::Read,
-    path::Path,
-    time::Duration,
-};
+use std::{env::current_dir, fs, io::Read, path::Path, time::Duration};
 
 use parser::InteractionTest;
 use regex::Regex;
@@ -43,8 +37,9 @@ fn main() {
         .interaction
         .pattern
         .unwrap_or_else(|| ".*\\.txt".to_string());
-    let threads = config.runner.thread_count.unwrap_or(0);
-    let timeout = config.runner.timeout.unwrap_or(1000);
+    let runner_config = config.runner.unwrap_or_default();
+    let threads = runner_config.thread_count.unwrap_or(0);
+    let timeout = runner_config.timeout.unwrap_or(1000);
 
     let path = Path::new(&class_path);
 
