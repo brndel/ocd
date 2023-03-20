@@ -178,7 +178,7 @@ pub fn run(interaction: InteractionTest, config: &RunnerConfig) -> Result<(), Ru
   
       let string = String::from_utf8_lossy(&line_buffer).to_string();
   
-      tx.send((string, stdout)).expect("could not send");
+      let _ = tx.send((string, stdout));
     });
   
     let received = rx.recv_timeout(timeout.to_owned()).ok();
