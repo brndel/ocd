@@ -15,6 +15,7 @@ pub struct RunnerConfig {
   pub dir: String,
   pub arguments: Vec<String>,
   pub command: String,
+  pub timeout: Duration,
 }
 
 pub enum RunnerError {
@@ -124,7 +125,10 @@ pub fn run(interaction: InteractionTest, config: &RunnerConfig) -> Result<(), Ru
   let mut stdin = child.stdin.take().expect("failed to get stdin");
   let mut stdout = child.stdout.take().expect("failed to get stdout");
 
+  let timeout_move = config.timeout.to_owned();
+
   let inout_thread: JoinHandle<Result<(), RunnerError>> = thread::spawn(move || {
+    let timeout = timeout_move;
     let interaction_lines = interaction.lines.clone();
     let mut line_index = 0;
     let mut prev_lines = Vec::new();
@@ -144,7 +148,7 @@ pub fn run(interaction: InteractionTest, config: &RunnerConfig) -> Result<(), Ru
           prev_lines.push(out_line);
         }
         InteractionLineKind::OutputLiteral => {
-          let result = read_line(stdout);
+          let result = read_line(stdout, &timeout);
 
           if let Some((line, out)) = result {
             stdout = out;
@@ -171,7 +175,7 @@ pub fn run(interaction: InteractionTest, config: &RunnerConfig) -> Result<(), Ru
           });
         }
         InteractionLineKind::OutputRegex => {
-          let result = read_line(stdout);
+          let result = read_line(stdout, &timeout);
 
           if let Some((line, out)) = result {
             stdout = out;
@@ -203,7 +207,7 @@ pub fn run(interaction: InteractionTest, config: &RunnerConfig) -> Result<(), Ru
       }
     }
 
-    if let Some((line, _)) = read_line(stdout) {
+    if let Some((line, _)) = read_line(stdout, &timeout) {
       return Err(RunnerError::Fail {
         interaction,
         line: 0,
@@ -255,7 +259,7 @@ pub fn run(interaction: InteractionTest, config: &RunnerConfig) -> Result<(), Ru
   return result;
 }
 
-fn read_line(mut stdout: ChildStdout) -> Option<(String, ChildStdout)> {
+fn read_line(mut stdout: ChildStdout, timeout: &Duration) -> Option<(String, ChildStdout)> {
   let (tx, rx) = mpsc::channel();
 
   thread::spawn(move || {
@@ -277,7 +281,7 @@ fn read_line(mut stdout: ChildStdout) -> Option<(String, ChildStdout)> {
     tx.send((string, stdout)).expect("could not send");
   });
 
-  let received = rx.recv_timeout(Duration::from_millis(1000)).ok();
+  let received = rx.recv_timeout(timeout.to_owned()).ok();
 
   received
 }

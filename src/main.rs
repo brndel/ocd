@@ -6,7 +6,7 @@ use std::{
   io::{stdout, Write},
   path::Path,
   sync::mpsc,
-  thread::{self, JoinHandle},
+  thread::{self, JoinHandle}, time::Duration,
 };
 
 use clap::Parser;
@@ -36,7 +36,8 @@ fn main() {
   let config = RunnerConfig {
         dir: path.to_str().unwrap().to_string(),
         command:  "java".to_string(),
-        arguments:  vec!["-classpath".to_string(), out_path.to_str().unwrap().to_string(), main_path.to_string()]
+        arguments:  vec!["-classpath".to_string(), out_path.to_str().unwrap().to_string(), main_path.to_string()],
+        timeout: Duration::from_millis(1000),
     };
 
   let interaction_path: &str = interactions_dir.as_str();
