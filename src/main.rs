@@ -24,6 +24,7 @@ fn main() {
   let interactions_dir = args.interactions_path;
   let interaction_file_pattern = args.pattern.unwrap_or_else(|| ".*\\.txt".to_string());
   let threads = args.threads.unwrap_or(true);
+  let timeout = args.timeout.unwrap_or(1000);
 
   let path = Path::new(&project_dir);
   let out_path = path
@@ -37,7 +38,7 @@ fn main() {
         dir: path.to_str().unwrap().to_string(),
         command:  "java".to_string(),
         arguments:  vec!["-classpath".to_string(), out_path.to_str().unwrap().to_string(), main_path.to_string()],
-        timeout: Duration::from_millis(1000),
+        timeout: Duration::from_millis(timeout),
     };
 
   let interaction_path: &str = interactions_dir.as_str();

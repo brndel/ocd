@@ -27,4 +27,10 @@ pub struct OcdArgs {
   /// [default: true]
   #[arg(short, long)]
   pub threads: Option<bool>,
+
+  /// The duration in milliseconds a tested programm has to respond after given input.
+  /// 
+  /// [default: 1000]
+  #[arg(long)]
+  pub timeout: Option<u64>
 }
