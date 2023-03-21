@@ -11,7 +11,7 @@ pub struct OcdConfig {
 #[derive(Deserialize)]
 pub struct OcdInteractionConfig {
     pub path: String,
-    pub pattern: Option<String>,
+    pub pattern: Option<Vec<String>>,
 }
 
 #[derive(Deserialize, Default)]

@@ -35,10 +35,10 @@ fn main() {
     let class_path = config.class_path;
     let main_path = config.main_class;
     let interactions_dir = config.interaction.path;
-    let interaction_file_pattern = config
+    let interaction_file_patterns = config
         .interaction
         .pattern
-        .unwrap_or_else(|| ".*\\.txt".to_string());
+        .unwrap_or_else(|| vec![".*\\.txt".to_string()]);
     let runner_config = config.runner.unwrap_or_default();
     let threads = runner_config.thread_count.unwrap_or(0);
     let timeout = runner_config.timeout.unwrap_or(1000);
@@ -61,7 +61,7 @@ fn main() {
 
     let interaction_path: &str = interactions_dir.as_str();
 
-    let interactions = collect_interactions(interaction_path, &interaction_file_pattern);
+    let interactions = collect_interactions(interaction_path, &interaction_file_patterns);
 
     println!(
         "Found {} interactions in '{}'",
@@ -80,8 +80,9 @@ fn main() {
     }
 }
 
-fn collect_interactions(path_name: &str, file_pattern: &str) -> Vec<InteractionTest> {
-    let file_regex = Regex::new(file_pattern).expect("invalid regex");
+fn collect_interactions(path_name: &str, file_patterns: &Vec<String>) -> Vec<InteractionTest> {
+    let file_pattern = format!("^{}$", file_patterns.join("|"));
+    let file_regex = Regex::new(&file_pattern).expect("invalid regex");
     let interactions = collect_files(path_name, &file_regex)
         .into_iter()
         .map(|path| parser::parse(&path).expect("failed to parse interaction"));
