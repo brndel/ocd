@@ -81,7 +81,7 @@ fn main() {
 }
 
 fn collect_interactions(path_name: &str, file_patterns: &Vec<String>) -> Vec<InteractionTest> {
-    let file_pattern = format!("^{}$", file_patterns.join("|"));
+    let file_pattern = format!("^({})$", file_patterns.join("|"));
     let file_regex = Regex::new(&file_pattern).expect("invalid regex");
     let interactions = collect_files(path_name, &file_regex)
         .into_iter()
