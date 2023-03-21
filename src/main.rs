@@ -10,16 +10,18 @@ use regex::Regex;
 use crate::{config::OcdConfig, runner::RunnerConfig};
 
 fn main() {
-    let file = fs::File::open("ocd.toml");
-    if let Err(e) = file {
-        println!("{}", e);
+    let config_file_path = "ocd.toml";
+    let file = fs::File::open(config_file_path);
+    if let Err(_) = file {
+        println!("could not find '{}'", config_file_path);
         return;
     }
     let mut file = file.unwrap();
 
     let mut file_str = String::new();
-    file.read_to_string(&mut file_str)
-        .expect("could not read config file");
+    if let Err(_) = file.read_to_string(&mut file_str) {
+        println!("'{}' was found but could not be read", config_file_path);
+    }
 
     let config = toml::from_str::<OcdConfig>(file_str.as_str());
 
