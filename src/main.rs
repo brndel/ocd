@@ -40,7 +40,7 @@ fn main() {
         .pattern
         .unwrap_or_else(|| vec![".*\\.txt".to_string()]);
     let runner_config = config.runner.unwrap_or_default();
-    let threads = runner_config.thread_count.unwrap_or(0);
+    let threads = runner_config.thread_count.unwrap_or(4);
     let timeout = runner_config.timeout.unwrap_or(1000);
 
     let path = Path::new(&class_path);
