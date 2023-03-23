@@ -29,7 +29,7 @@ The default values of all optional fields are the ones defined here
 
 To run ocd for your project, add a `ocd.toml` file to the source directory and run `ocd` through a terminal.
 
-`ocd` will recursively look for all files in the specified folder matching the given pattern and test your programm with them.
+`ocd` will recursively look for all files in the specified interaction folder matching the given pattern and test your programm with them.
 
 ### Known issues
 - Running on Windows? (didn't test it there, would be strange if everything worked out of the box)
