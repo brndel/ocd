@@ -6,9 +6,12 @@ SimpleCodeTester is written in Java hence being very slow.
 OfflineCodeTester is written in Rust hence being very fast.
 
 ## Running
-To run `ocd` you currently need to build it yourself using `cargo build --release`.
-Binaries may be provided later.
+### Building
+To run `ocd` you first need to build it using `cargo build --release`.
 
+You can alternatively download linux binaries [here](https://github.com/brndel/ocd/releases/tag/v0.2)
+
+### Config
 When you run ocd, it looks for a file called `ocd.toml` in the current directory.
 
 `ocd.toml` should contain the following information
@@ -31,5 +34,5 @@ To run ocd for your project, add a `ocd.toml` file to the source directory and r
 
 `ocd` will recursively look for all files in the specified interaction folder matching the given pattern and test your programm with them.
 
-### Known issues
+## Known issues
 - Running on Windows? (didn't test it there, would be strange if everything worked out of the box)
